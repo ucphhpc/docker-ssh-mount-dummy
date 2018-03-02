@@ -36,7 +36,7 @@ def main(args):
     mig_dict = {'SESSIONID': str(os.urandom(24), 'utf-8'),
                 'USER_CERT': user_cert,
                 'TARGET_MOUNT_ADDR': "@" + ip + ":",
-                'MOUNTSSHPRIVATEKEY': rsa_key,
+                'MOUNTSSHPRIVATEKEY': "{}".format(rsa_key),
                 'MOUNTSSHPUBLICKEY': public_key}
 
     mount_header = {'Remote-User': user_cert,
