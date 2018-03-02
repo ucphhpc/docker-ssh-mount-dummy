@@ -33,7 +33,7 @@ def main(args):
     user_cert = '/C=DK/ST=NA/L=NA/O=NBI/OU=NA/CN=Rasmus ' \
                 'Munk/emailAddress=rasmus.munk@nbi.ku.dk'
 
-    mig_dict = {'SESSIONID': os.urandom(24),
+    mig_dict = {'SESSIONID': str(os.urandom(24), 'utf-8'),
                 'USER_CERT': user_cert,
                 'TARGET_MOUNT_ADDR': "@" + ip + ":",
                 'MOUNTSSHPRIVATEKEY': rsa_key,
