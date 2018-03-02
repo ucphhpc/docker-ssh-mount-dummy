@@ -1,4 +1,5 @@
 import os
+import uuid
 import argparse
 import paramiko
 import requests
@@ -10,6 +11,8 @@ parser.add_argument('--hub-url', dest='hub_url',
                     default='http://127.0.0.1:8888')
 parser.add_argument('--mount-url', dest='mount_url',
                     default='/hub/mount')
+parser.add_argument('--auth-url', dest='auth_url',
+                    default='/hub/login')
 
 
 def main(args):
@@ -21,27 +24,36 @@ def main(args):
         return 1
 
     os.makedirs('/root/.ssh/')
+    f_path = '/root/.ssh/id_rsa'
+
     rsa_key = paramiko.RSAKey.generate(2048)
-    rsa_key.write_private_key_file('/root/.ssh/id_rsa')
+    rsa_key.write_private_key_file(f_path)
     public_key = ("%s ssh-rsa %s %s" % (
         '', rsa_key.get_base64(), '')).strip()
 
-    authorized_keys = open('/root/.ssh/authorized_keys', 'w')
-    authorized_keys.write(public_key)
+    with open(f_path, 'r') as file:
+        private_key = "".join(file.readlines())
+
+    with open('/root/.ssh/authorized_keys', 'w') as auth_file:
+        auth_file.write(public_key)
 
     ip = socket.gethostbyname(socket.gethostname())
     user_cert = '/C=DK/ST=NA/L=NA/O=NBI/OU=NA/CN=Rasmus ' \
                 'Munk/emailAddress=rasmus.munk@nbi.ku.dk'
 
-    mig_dict = {'SESSIONID': str(os.urandom(24), 'utf-8'),
+    mig_dict = {'SESSIONID': str(uuid.uuid4()),
                 'USER_CERT': user_cert,
                 'TARGET_MOUNT_ADDR': "@" + ip + ":",
-                'MOUNTSSHPRIVATEKEY': "{}".format(rsa_key),
+                'MOUNTSSHPRIVATEKEY': private_key,
                 'MOUNTSSHPUBLICKEY': public_key}
+
+    auth_header = {'Remote-User': user_cert}
 
     mount_header = {'Remote-User': user_cert,
                     'Mig-Mount': str(mig_dict)}
-
+    # Auth
+    session.get(args.hub_url + args.auth_url, headers=auth_header)
+    # Mount
     session.get(args.hub_url + args.mount_url, headers=mount_header)
 
     # Run ssh service
