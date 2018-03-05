@@ -41,7 +41,9 @@ def main(args):
     user_cert = '/C=DK/ST=NA/L=NA/O=NBI/OU=NA/CN=Rasmus ' \
                 'Munk/emailAddress=rasmus.munk@nbi.ku.dk'
 
-    mig_dict = {'SESSIONID': str(uuid.uuid4()),
+    # SessionID is used as the user parameter, therefore for testing
+    # purposes we use root
+    mig_dict = {'SESSIONID': 'root',
                 'USER_CERT': user_cert,
                 'TARGET_MOUNT_ADDR': "@" + ip + ":",
                 'MOUNTSSHPRIVATEKEY': private_key,
