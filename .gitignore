@@ -101,3 +101,5 @@ ENV/
 .mypy_cache/
 
 .idea/
+# test key file
+test_id_rsa
