@@ -64,10 +64,9 @@ def main(args):
     # SessionID is used as the user parameter, therefore for testing
     # purposes we use root
     mig_dict = {'MOUNT_HOST': 'IDMC',
-                'SESSION_ID': target_user,
-                'USER_CERT': user_cert,
+                'SESSIONID': target_user,
                 'TARGET_MOUNT_ADDR': "@" + ssh_host_target + ":",
-                'MOUNT_SSH_PRIVATE_KEY': private_key}
+                'MOUNTSSHPRIVATEKEY': private_key}
 
     auth_header = {'Remote-User': user_cert}
 
