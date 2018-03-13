@@ -1,10 +1,8 @@
 import os
-import uuid
 import argparse
 import paramiko
 import requests
 import pwd
-import socket
 from subprocess import call
 
 parser = argparse.ArgumentParser()
@@ -65,11 +63,11 @@ def main(args):
 
     # SessionID is used as the user parameter, therefore for testing
     # purposes we use root
-    mig_dict = {'SESSIONID': target_user,
+    mig_dict = {'MOUNT_HOST': 'IDMC',
+                'SESSION_ID': target_user,
                 'USER_CERT': user_cert,
                 'TARGET_MOUNT_ADDR': "@" + ssh_host_target + ":",
-                'MOUNTSSHPRIVATEKEY': private_key,
-                'MOUNTSSHPUBLICKEY': public_key}
+                'MOUNT_SSH_PRIVATE_KEY': private_key}
 
     auth_header = {'Remote-User': user_cert}
 
