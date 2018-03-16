@@ -20,13 +20,6 @@ def main(args):
         print("The required DOCKER_HOST environment variable is not present")
         return 1
 
-    session = requests.session()
-    try:
-        session.get(args.hub_url)
-    except (requests.ConnectionError, requests.exceptions.InvalidSchema):
-        print("{} can't be reached".format(args.hub_url))
-        return 1
-
     target_user = 'mountuser'
     home = "/home/{}".format(target_user)
     ssh_dir = "{}/.ssh".format(home)
@@ -72,10 +65,18 @@ def main(args):
 
     mount_header = {'Remote-User': user_cert,
                     'Mig-Mount': str(mig_dict)}
-    # Auth
-    session.get(args.hub_url + args.auth_url, headers=auth_header)
-    # Mount
-    session.get(args.hub_url + args.mount_url, headers=mount_header)
+
+    with requests.Session() as session:
+        try:
+            session.get(args.hub_url)
+        except (requests.ConnectionError, requests.exceptions.InvalidSchema):
+            print("{} can't be reached".format(args.hub_url))
+            return 1
+
+        # Auth
+        session.get(args.hub_url + args.auth_url, headers=auth_header)
+        # Mount
+        session.get(args.hub_url + args.mount_url, headers=mount_header)
 
     # Run ssh service
     call(['/usr/sbin/sshd', '-D', '-E', '/var/log/ssh'])
