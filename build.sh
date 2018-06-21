@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t nielsbohr/mig-mount-dummy .
+docker build -t nielsbohr/jupyter-mount-dummy .
