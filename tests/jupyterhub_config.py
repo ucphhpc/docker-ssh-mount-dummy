@@ -12,7 +12,6 @@ spawn_cmd = os.environ.get('DOCKER_SPAWN_CMD', "/usr/local/bin/start-singleuser.
 c.DockerSpawner.extra_create_kwargs.update({'command': spawn_cmd})
 
 c.DockerSpawner.image = 'jupyter/base-notebook:30f16d52126f'
-
 c.DockerSpawner.use_internal_ip = True
 
 network_name = "jh_test"
@@ -22,6 +21,8 @@ c.DockerSpawner.remove_containers = True
 
 notebook_dir = '/home/jovyan/work'
 c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
-c.DockerSpawner.extra_create_kwargs.update({'driver_config': 'rasmunk/sshfs:latest'})
 
 c.JupyterHub.authenticator_class = 'jhub_remote_auth_mount.MountRemoteUserAuthenticator'
+
+c.JupyterHub.api_tokens = {"tetedfgd09dg09":
+                               "f5bt2rclf5jvipkoiexuypkoiexu6pkoijes6t2vhvhecl2djy6u4ylnmuxwk3lbnfweczdeojsxg4z5nvqws3caonsgm43gfzrw63i"}

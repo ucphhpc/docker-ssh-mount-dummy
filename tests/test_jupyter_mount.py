@@ -1,6 +1,5 @@
 import os
 import pytest
-import time
 import socket
 import requests
 import docker
@@ -41,34 +40,33 @@ dummy_cont = {'image': IMAGE, 'detach': True, 'ports': {22: 2222}}
 
 # launch underlying stack for the test
 @pytest.mark.parametrize('image', [docker_img], indirect=['image'])
-@pytest.mark.parametrize('network', [{'name': NETWORK_NAME, 'driver': 'bridge',
-                                      'options': {'subnet': '192.168.0.0/20'},
-                                      'attachable': True}], indirect=['network'])
-def test_jupyter_mount(image, network, make_containers):
+@pytest.mark.parametrize('network', [{'name': NETWORK_NAME, 'driver': 'bridge'}],
+                         indirect=['network'])
+def test_jupyter_mount(image, network, make_container):
     client = docker.from_env()
-    jhub, dummy = make_containers([jhub_cont, dummy_cont])
-    hub_url = 'http://127.0.0.1:8000'
-    auth_url = '/hub/auth'
-    spawn_url = '/hub/spawn'
-    mount_url = '/hub/mount'
-    #private_key = container.exec_run('cat /home/mountuser/.ssh/id_rsa')[1]
+    jhub = make_container(jhub_cont)
+    dummy = make_container(dummy_cont)
+    containers_pre = set(client.containers.list())
+    hub_url = 'http://127.0.0.1:8000/hub'
+
+    auth_url, mount_url, spawn_url = '/login', '/mount', '/spawn'
 
     # volume
     target_user = 'mountuser'
-    ssh_host_target = ''
-    private_key = ''
-    sshcmd = ''.join([target_user, '@', ssh_host_target, ':'])
-
-    sshfs_volume = {'name': 'testvolume', 'driver': 'rasmunk/sshfs:latest',
-                    'driver_opts': {'sshcmd': sshcmd, 'id_rsa': private_key,
-                                    'big_writes': '', 'allow_other': '', 'port': '2222'}}
+    ssh_host_target = socket.gethostname()
+    private_key = dummy.exec_run('cat /home/mountuser/.ssh/id_rsa')[1].decode('utf-8')
 
     # Auth requests
     user_cert = '/C=DK/ST=NA/L=NA/O=NBI/OU=NA/CN=Name' \
                 '/emailAddress=mail@sdfsf.com'
 
+    mount_dict = {'HOST': 'DUMMY', 'USERNAME': target_user,
+                  'PATH': ''.join(['@', ssh_host_target, ':']),
+                  'PRIVATEKEY': private_key}
+
     # Username should not be root normally, used for testing here
-    user_header = {'Remote-User': user_cert}
+    header = {'Remote-User': user_cert,
+              'Mount': str(mount_dict)}
 
     with requests.Session() as session:
         try:
@@ -76,15 +74,23 @@ def test_jupyter_mount(image, network, make_containers):
         except (requests.ConnectionError, requests.exceptions.InvalidSchema):
             print("{} can't be reached".format(hub_url))
             return 1
-
         # Auth
-        session.get(''.join([hub_url, auth_url]), headers=user_header)
+        resp = session.get(''.join([hub_url, auth_url]), headers=header)
+        assert resp.status_code == 200
+        # Mount
+        resp = session.post(''.join([hub_url, mount_url]), headers=header)
+        assert resp.status_code == 200
         # Spawn
-        session.post(''.join([hub_url, spawn_url]), headers=user_header)
-
+        resp = session.post(''.join([hub_url, spawn_url]), headers=header)
+        assert resp.status_code == 200
         # Write test
 
-# name = NETWORK_NAME,
-# driver = "overlay",
-# options = {"subnet": "192.168.0.0/20"},
-# attachable = True
+        spawned_containers = set(client.containers.list()) - containers_pre
+        for container in spawned_containers:
+            notebook_id = container.name.strip("jupyter-")
+            remove_url = '/api/users/{}/server'.format(notebook_id)
+            header.update({'Authorization': 'token tetedfgd09dg09'})
+            # Remove
+            resp = session.delete(''.join([hub_url, remove_url]), headers=header)
+            assert resp.status_code == 204
+            client.volumes.prune()

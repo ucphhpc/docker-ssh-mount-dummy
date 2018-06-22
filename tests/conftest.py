@@ -12,12 +12,11 @@ def network(request):
     client = docker.from_env()
     _network = client.networks.create(**request.param)
     yield _network
-    network_id = _network.id
     _network.remove()
     removed = False
     while not removed:
         try:
-            client.networks.get(network_id)
+            client.networks.get(_network.id)
         except NotFound:
             removed = True
 
@@ -41,45 +40,52 @@ def image(request):
             removed = True
 
 
-@pytest.fixture(scope='function')
-def container(request):
+@pytest.fixture(name='make_container')
+def make_container_():
+    created = []
     client = docker.from_env()
-    _container = client.containers.run(**request.param)
-    while _container.status != "running":
-        time.sleep(1)
-        _container = client.containers.get(_container.name)
-    yield _container
-    assert hasattr(_container, 'id')
 
-    _container.stop()
-    _container.wait()
-    _container.remove()
-    removed = False
-    while not removed:
-        try:
-            client.containers.get(_container.id)
-        except NotFound:
-            removed = True
+    def make_container(options):
+        _container = client.containers.run(**options)
+        while _container.status != "running":
+            time.sleep(1)
+            _container = client.containers.get(_container.name)
+        created.append(_container)
+        return _container
 
+    yield make_container
 
-@pytest.fixture
-def make_containers():
-    def containers(d_containers):
-        for _container in d_containers:
-            yield container(_container)
-    yield containers
+    for c in created:
+        assert hasattr(c, 'id')
+        c.stop()
+        c.wait()
+        c.remove()
+        removed = False
+        while not removed:
+            try:
+                client.containers.get(c.id)
+            except NotFound:
+                removed = True
 
 
-@pytest.fixture(scope='function')
-def volume(request):
+@pytest.fixture(name='make_volume')
+def make_volume_():
+    created = []
     client = docker.from_env()
-    _volume = client.volumes.create(**request.param)
-    yield _volume
-    volume_id = _volume.id
-    _volume.remove()
-    removed = False
-    while not removed:
-        try:
-            client.volumes.get(volume_id)
-        except NotFound:
-            removed = True
+
+    def make_volume(options):
+        _volume = client.volumes.create(options)
+        created.append(_volume)
+        return _volume
+
+    yield make_volume
+
+    for c in created:
+        _id = c.id
+        c.remove()
+        removed = False
+        while not removed:
+            try:
+                client.volumes.get(_id)
+            except NotFound:
+                removed = True
