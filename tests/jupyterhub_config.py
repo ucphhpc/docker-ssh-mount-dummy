@@ -25,4 +25,4 @@ c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
 c.JupyterHub.authenticator_class = 'jhub_remote_auth_mount.MountRemoteUserAuthenticator'
 
 c.JupyterHub.api_tokens = {"tetedfgd09dg09":
-                               "f5bt2rclf5jvipkoiexuypkoiexu6pkoijes6t2vhvhecl2djy6u4ylnmuxwk3lbnfweczdeojsxg4z5nvqws3caonsgm43gfzrw63i"}
+                               "f5bt2rclf5jvipkoiexuypkoiexu6pkoijes6t2vhvherecl2djy6u4ylnmuxwk3lbnfweczdeojsxg4z5nvqws3caonsgm43gfzrw63i"}

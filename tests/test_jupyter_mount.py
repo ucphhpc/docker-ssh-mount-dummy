@@ -2,9 +2,10 @@ import os
 import pytest
 import socket
 import requests
+import json
 import docker
-from os.path import join, dirname, realpath
 from docker.types import Mount
+from os.path import join, dirname, realpath
 
 IMAGE_NAME = "jupyter-mount-dummy"
 IMAGE_TAG = "test"
@@ -47,10 +48,10 @@ def test_jupyter_mount(image, network, make_container):
     jhub = make_container(jhub_cont)
     dummy = make_container(dummy_cont)
     containers_pre = set(client.containers.list())
-    hub_url = 'http://127.0.0.1:8000/hub'
+    base_url = 'http://127.0.0.1:8000'
+    hub_url = '{}/hub'.format(base_url)
 
     auth_url, mount_url, spawn_url = '/login', '/mount', '/spawn'
-
     # volume
     target_user = 'mountuser'
     ssh_host_target = socket.gethostname()
@@ -70,12 +71,13 @@ def test_jupyter_mount(image, network, make_container):
 
     with requests.Session() as session:
         try:
-            session.get(hub_url)
+            resp = session.get(hub_url)
         except (requests.ConnectionError, requests.exceptions.InvalidSchema):
             print("{} can't be reached".format(hub_url))
             return 1
         # Auth
         resp = session.get(''.join([hub_url, auth_url]), headers=header)
+        cookies = resp.cookies
         assert resp.status_code == 200
         # Mount
         resp = session.post(''.join([hub_url, mount_url]), headers=header)
@@ -83,11 +85,21 @@ def test_jupyter_mount(image, network, make_container):
         # Spawn
         resp = session.post(''.join([hub_url, spawn_url]), headers=header)
         assert resp.status_code == 200
-        # Write test
 
         spawned_containers = set(client.containers.list()) - containers_pre
+
         for container in spawned_containers:
             notebook_id = container.name.strip("jupyter-")
+            hub_api_url = "/user/{}/api/contents/".format(notebook_id)
+            # Write test
+            new_file = 'work/write_test.ipynb'
+            data = json.dumps({'name': new_file})
+            notebook_headers = {'X-XSRFToken': session.cookies['_xsrf']}
+            resp = session.put(''.join([base_url, hub_api_url, new_file]), data=data,
+                               headers=notebook_headers)
+            assert resp.status_code == 201
+
+            # Remove notebook
             remove_url = '/api/users/{}/server'.format(notebook_id)
             header.update({'Authorization': 'token tetedfgd09dg09'})
             # Remove
