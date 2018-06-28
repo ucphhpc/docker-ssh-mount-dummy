@@ -103,3 +103,5 @@ ENV/
 .idea/
 # test key file
 test_id_rsa
+
+build/

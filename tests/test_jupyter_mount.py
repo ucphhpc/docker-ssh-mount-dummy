@@ -45,7 +45,7 @@ dummy_cont = {'image': IMAGE, 'detach': True, 'ports': {22: 2222}}
                          indirect=['network'])
 def test_jupyter_mount(image, network, make_container):
     client = docker.from_env()
-    jhub = make_container(jhub_cont)
+    make_container(jhub_cont)
     dummy = make_container(dummy_cont)
     containers_pre = set(client.containers.list())
     base_url = 'http://127.0.0.1:8000'
@@ -77,7 +77,6 @@ def test_jupyter_mount(image, network, make_container):
             return 1
         # Auth
         resp = session.get(''.join([hub_url, auth_url]), headers=header)
-        cookies = resp.cookies
         assert resp.status_code == 200
         # Mount
         resp = session.post(''.join([hub_url, mount_url]), headers=header)
