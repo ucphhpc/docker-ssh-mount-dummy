@@ -1,4 +1,3 @@
-import os
 import pytest
 import socket
 import requests
@@ -7,18 +6,18 @@ import docker
 from docker.types import Mount
 from os.path import join, dirname, realpath
 
-IMAGE_NAME = "jupyter-mount-dummy"
+IMAGE_NAME = "ssh-mount-dummy"
 IMAGE_TAG = "test"
 IMAGE = ''.join([IMAGE_NAME, ":", IMAGE_TAG])
 NETWORK_NAME = "jh_test"
 
 # paths
-docker_path = dirname(os.getcwd())
+docker_path = dirname(dirname(realpath(__file__)))
 config_path = join(dirname(realpath(__file__)), 'jupyterhub_config.py')
 sock_path = '/var/run/docker.sock'
 
 # image_build
-docker_img = {'path': docker_path, 'tag': IMAGE, 'rm': True, 'pull': True}
+docker_img = {'path': docker_path, 'tag': IMAGE, 'rm': True, 'pull': False}
 
 # containers
 jhub_cont = {'image': 'nielsbohr/jupyterhub:devel', 'name': 'jupyterhub',
@@ -71,7 +70,7 @@ def test_jupyter_mount(image, network, make_container):
 
     with requests.Session() as session:
         try:
-            resp = session.get(hub_url)
+            session.get(hub_url)
         except (requests.ConnectionError, requests.exceptions.InvalidSchema):
             print("{} can't be reached".format(hub_url))
             return 1
