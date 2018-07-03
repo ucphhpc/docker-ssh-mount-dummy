@@ -68,6 +68,32 @@ def make_container_():
                 removed = True
 
 
+@pytest.fixture(name='make_service')
+def make_service_():
+    created = []
+    client = docker.from_env()
+
+    def make_service(options):
+        _service = client.services.create(**options)
+        while 'running' not in [task['Status']['State'] for task in _service.tasks()]:
+            time.sleep(1)
+            _service = client.services.get(_service.id)
+        created.append(_service)
+        return _service
+
+    yield make_service
+
+    for c in created:
+        assert hasattr(c, 'id')
+        c.remove()
+        removed = False
+        while not removed:
+            try:
+                client.services.get(c.id)
+            except NotFound:
+                removed = True
+
+
 @pytest.fixture(name='make_volume')
 def make_volume_():
     created = []
