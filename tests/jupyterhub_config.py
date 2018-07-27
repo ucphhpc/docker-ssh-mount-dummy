@@ -24,7 +24,7 @@ notebook_dir = '/home/jovyan/work'
 c.DockerSpawner.volumes = {'jupyterhub-user-{username}': notebook_dir}
 
 c.JupyterHub.authenticator_class = \
-    'jhub_remote_auth_mount.MountRemoteUserAuthenticator'
+    'jhubauthenticators.MountRemoteUserAuthenticator'
 
 c.JupyterHub.api_tokens = {"tetedfgd09dg09":
                                "f5bt2rclf5jvipkoiexuypkoiexu6pkoijes6t2vh"
