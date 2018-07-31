@@ -21,6 +21,7 @@ WORKDIR /app
 RUN pip3 install setuptools wheel
 RUN pip3 install -r requirements.txt
 RUN useradd -ms /bin/bash mountuser
+RUN echo 'mountuser:Passw0rd!' | chpasswd
 
 EXPOSE 22
 
