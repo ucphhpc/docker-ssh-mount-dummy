@@ -25,4 +25,10 @@ RUN echo 'mountuser:Passw0rd!' | chpasswd
 
 EXPOSE 22
 
-ENTRYPOINT ["/usr/bin/python3", "main.py"]
+# Add Tini
+ENV TINI_VERSION v0.18.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+ENTRYPOINT ["/tini", "--"]
+
+CMD ["/usr/bin/python3", "main.py"]
