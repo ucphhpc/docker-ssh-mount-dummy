@@ -50,7 +50,7 @@ def test_jupyter_mount(image, network, make_container):
     base_url = 'http://127.0.0.1:8000'
     hub_url = '{}/hub'.format(base_url)
 
-    auth_url, mount_url, spawn_url = '/login', '/mount', '/spawn'
+    auth_url, data_url, spawn_url = '/login', '/data', '/spawn'
     # volume
     target_user = 'mountuser'
     ssh_host_target = socket.gethostname()
@@ -78,7 +78,7 @@ def test_jupyter_mount(image, network, make_container):
         resp = session.get(''.join([hub_url, auth_url]), headers=header)
         assert resp.status_code == 200
         # Mount
-        resp = session.post(''.join([hub_url, mount_url]), headers=header)
+        resp = session.post(''.join([hub_url, data_url]), headers=header)
         assert resp.status_code == 200
         # Spawn
         resp = session.post(''.join([hub_url, spawn_url]), headers=header)
