@@ -1,4 +1,4 @@
-wheel==0.30.0
-setuptools==38.5.1
-requests==2.18.4
-paramiko==2.4.1
+wheel>=0.30.*
+setuptools>=38.5.*
+requests>=2.20.*
+paramiko>=2.4.*
