@@ -2,7 +2,6 @@ import pytest
 import socket
 import docker
 from paramiko import SSHClient
-from paramiko.hostkeys import HostKeys
 from paramiko.client import AutoAddPolicy
 from paramiko.ssh_exception import BadHostKeyException, AuthenticationException, \
     SSHException
@@ -32,8 +31,7 @@ ssh_dummy_cont = {'image': IMAGE, 'detach': True, 'ports': {22: 2222}}
 def test_ssh_mount(image, network, make_container):
     client = docker.from_env()
     ssh = SSHClient()
-    ssh_target = make_container(ssh_dummy_cont)
-
+    make_container(ssh_dummy_cont)
     # volume
     target_user = 'mountuser'
     password = 'Passw0rd!'
