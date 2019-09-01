@@ -1,4 +1,3 @@
 wheel>=0.33.*
 setuptools>=41.2.*
-requests>=2.22.*
 paramiko>=2.6.*
