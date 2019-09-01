@@ -20,7 +20,7 @@ sock_path = '/var/run/docker.sock'
 docker_img = {'path': docker_path, 'tag': IMAGE, 'rm': True, 'pull': False}
 
 # containers
-jhub_cont = {'image': 'nielsbohr/jupyterhub:devel', 'name': 'jupyterhub',
+jhub_cont = {'image': 'nielsbohr/jupyterhub:latest', 'name': 'jupyterhub',
              'mounts': [Mount(source=sock_path,
                               target=sock_path,
                               read_only=False,
