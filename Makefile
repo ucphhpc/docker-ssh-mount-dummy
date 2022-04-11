@@ -11,7 +11,7 @@ ARGS=
 .PHONY: all init dockerbuild dockerclean dockerpush clean dist distclean maintainer-clean
 .PHONY: install uninstall installcheck check
 
-all: init dockerbuild
+all: venv install-dep init dockerbuild
 
 init:
 ifeq ($(shell test -e defaults.env && echo yes), yes)
@@ -32,6 +32,7 @@ dockerpush:
 clean:
 	$(MAKE) dockerclean
 	$(MAKE) distclean
+	$(MAKE) venv-clean
 	rm -fr .env
 	rm -fr .pytest_cache
 	rm -fr tests/__pycache__
@@ -48,16 +49,23 @@ maintainer-clean:
 	$(MAKE) distclean
 
 install-dep:
-### PLACEHOLDER ###
+	$(VENV)/pip install -r requirements.txt
 
 install:
 	$(MAKE) install-dep
 
 uninstall:
-### PLACEHOLDER ###
+	$(VENV)/pip uninstall -y -r requirements.txt
+
+uninstallcheck:
+	$(VENV)/pip uninstall -y -r tests/requirements.txt
+	docker plugin disable ucphhpc/sshfs:latest
+	docker plugin rm ucphhpc/sshfs:latest
 
 installcheck:
-### PLACEHOLDER ###
+	$(VENV)/pip install -r tests/requirements.txt
 
 check:
-### PLACEHOLDER ###
+	. $(VENV)/activate; pytest -s -v tests/
+
+include Makefile.venv

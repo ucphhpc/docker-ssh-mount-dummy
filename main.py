@@ -4,14 +4,17 @@ import pwd
 from subprocess import call
 
 
-def get_username():
+def get_username(default_fallback=False):
     if "USERNAME" not in os.environ:
-        return None
+        if default_fallback:
+            return "mountuser"
+        else:
+            return None
     return os.environ["USERNAME"]
 
 
 def main():
-    username = get_username()
+    username = get_username(default_fallback=True)
     if not username:
         print("Missing USERNAME environment variable was not set.")
         exit(-1)
