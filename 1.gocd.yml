@@ -9,7 +9,7 @@ pipelines:
     group: gocd_images
     locking: off
     materials:
-      gocd_agent_pypi_git:  # this is the name of material
+      docker_ssh_mount_dummy_git:  # this is the name of material
         # says about type of material and url at once
         name: ssh-mount-dummy
         git: https://github.com/rasmunk/docker-ssh-mount-dummy.git
@@ -26,7 +26,7 @@ pipelines:
     parameters:
       IMAGE: docker-ssh-mount-dummy
       ARGS: ''
-      COMMIT_TAG: GO_REVISION_GOCD_AGENT_PYPI_GIT
+      COMMIT_TAG: GO_REVISION_GOCD_AGENT_DOCKER_GIT
       DEFAULT_TAG: latest
       SRC_DIRECTORY: ssh-mount-dummy
       TEST_DIRECTORY: ssh-mount-dummy

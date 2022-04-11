@@ -2,12 +2,11 @@ version: '3.7'
 
 services:
   agent:
-    image: ucphhpc/ssh-mount-dummy:$TAG
+    image: ucphhpc/ssh-mount-dummy:${TAG}
     build:
       context: ./
       dockerfile: Dockerfile
       args:
-        TAG: ${TAG}
         USERNAME: ${USERNAME}
         PASSWORD: ${PASSWORD}
     ports:
