@@ -24,6 +24,16 @@ To build the image, simply use make in the root of the repo directory::
     Successfully built 0607b95f8b54
     Successfully tagged ucphhpc/ssh-mount-dummy:edge
 
+-------------
+Configuration
+-------------
+
+The default password in the `ucphhpc/ssh-mount-dummy` image is set to ``Passw0rd!``.
+This can be changed by modifying the ``.env`` file before the image is being built with make.
+
+After changing either the ``PASSWORD`` or ``USERNAME`` definitions in the ``.env`` file, the image has to be rebuilt before the changes
+will take effect.
+
 -------
 Running
 -------
@@ -38,12 +48,3 @@ In turn, the launched image can be stopped by running the following command::
 
     docker-compose down
 
--------------
-Configuration
--------------
-
-The default password in the `ucphhpc/ssh-mount-dummy` image is set to ``Passw0rd!``.
-This can be changed by modifying the ``.env`` file before the image is being built with make.
-
-After changing either the ``PASSWORD`` or ``USERNAME`` definitions in the ``.env`` file, the image has to be rebuilt before the changes
-will take effect.
