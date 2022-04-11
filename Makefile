@@ -59,8 +59,6 @@ uninstall:
 
 uninstallcheck:
 	$(VENV)/pip uninstall -y -r tests/requirements.txt
-	docker plugin disable ucphhpc/sshfs:latest
-	docker plugin rm ucphhpc/sshfs:latest
 
 installcheck:
 	$(VENV)/pip install -r tests/requirements.txt
