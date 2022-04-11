@@ -4,7 +4,7 @@ docker-ssh-mount-dummy
 
 A simple repo for providing a Docker container that can be used to test SSH(FS) access and mounting.
 
-**This should not be used in production for anything!**
+**This is used for testing and should not be used in production for anything!**
 
 ---------------
 Getting Started
