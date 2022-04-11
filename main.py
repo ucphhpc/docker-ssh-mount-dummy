@@ -4,9 +4,19 @@ import pwd
 from subprocess import call
 
 
+def get_username():
+    if "USERNAME" not in os.environ:
+        return None
+    return os.environ["USERNAME"]
+
+
 def main():
-    target_user = 'mountuser'
-    home = "/home/{}".format(target_user)
+    username = get_username()
+    if not username:
+        print("Missing USERNAME environment variable was not set.")
+        exit(-1)
+
+    home = "/home/{}".format(username)
     ssh_dir = "{}/.ssh".format(home)
 
     os.makedirs(ssh_dir)
@@ -22,9 +32,9 @@ def main():
         auth_file.write(public_key)
     os.chmod(auth_keys, 0o600)
 
-    # Ensure .ssh dir and it's content is owned by the target_user
-    uid, gid = pwd.getpwnam(target_user).pw_uid, \
-        pwd.getpwnam(target_user).pw_uid
+    # Ensure .ssh dir and it's content is owned by the username
+    uid, gid = pwd.getpwnam(username).pw_uid, \
+        pwd.getpwnam(username).pw_uid
 
     os.chown(ssh_dir, uid, gid)
     for root, dirs, files in os.walk(ssh_dir):

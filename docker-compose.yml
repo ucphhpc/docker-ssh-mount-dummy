@@ -8,5 +8,9 @@ services:
       dockerfile: Dockerfile
       args:
         TAG: ${TAG}
+        USERNAME: ${USERNAME}
+        PASSWORD: ${PASSWORD}
+    ports:
+      - "2222:22"
     env_file:
       - .env

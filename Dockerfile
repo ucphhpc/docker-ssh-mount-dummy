@@ -1,6 +1,9 @@
 FROM debian:latest
 LABEL MAINTAINER="Rasmus Munk <rasmus.munk@nbi.ku.dk>"
 
+ARG USERNAME=mountuser
+ARG PASSWORD=Passw0rd!
+
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
     openssh-server \
@@ -20,8 +23,8 @@ WORKDIR /app
 
 RUN pip3 install setuptools wheel
 RUN pip3 install -r requirements.txt
-RUN useradd -ms /bin/bash mountuser
-RUN echo 'mountuser:Passw0rd!' | chpasswd
+RUN useradd -ms /bin/bash ${USERNAME}
+RUN echo "${USERNAME}:${PASSWORD}" | chpasswd
 
 EXPOSE 22
 
