@@ -1,5 +1,5 @@
 FROM debian:latest
-MAINTAINER Rasmus Munk <rasmus.munk@nbi.ku.dk>
+LABEL MAINTAINER="Rasmus Munk <rasmus.munk@nbi.ku.dk>"
 
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
