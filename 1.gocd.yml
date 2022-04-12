@@ -26,7 +26,7 @@ pipelines:
     parameters:
       IMAGE: docker-ssh-mount-dummy
       ARGS: ''
-      COMMIT_TAG: GO_REVISION_DOCKER_SSH_MOUNT_DUMMY_GIT
+      COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
       DEFAULT_TAG: latest
       SRC_DIRECTORY: ssh-mount-dummy
       TEST_DIRECTORY: ssh-mount-dummy
