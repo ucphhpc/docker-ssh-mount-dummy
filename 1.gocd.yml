@@ -1,12 +1,12 @@
 environments:
-  gocd_images:
+  bare_metal_docker_image:
     environments:
       GIT_USER: "{{SECRET:[github][username]}}"
     pipelines:
       - ssh-mount-dummy
 pipelines:
   ssh-mount-dummy:
-    group: gocd_images
+    group: bare_metal_docker_image
     locking: off
     materials:
       ssh_mount_dummy_git:  # this is the name of material
@@ -31,4 +31,4 @@ pipelines:
       SRC_DIRECTORY: ssh-mount-dummy
       TEST_DIRECTORY: ssh-mount-dummy
       PUSH_DIRECTORY: publish-docker-scripts
-    template: docker_image
+    template: bare_metal_docker_image
