@@ -6,6 +6,8 @@ A simple repo for providing a Docker container that can be used to test SSH(FS) 
 
 **This is used for testing and should not be used in production for anything!**
 
+Builds of this image can be found at `DockerHub <https://hub.docker.com/r/ucphhpc/ssh-mount-dummy>`_.
+
 ---------------
 Getting Started
 ---------------
