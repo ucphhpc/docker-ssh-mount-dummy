@@ -2,6 +2,15 @@
 docker-ssh-mount-dummy
 ======================
 
+.. image:: https://img.shields.io/docker/v/ucphhpc/ssh-mount-dummy
+    :target: https://hub.docker.com/r/ucphhpc/ssh-mount-dummy
+
+.. image:: https://img.shields.io/docker/pulls/ucphhpc/ssh-mount-dummy
+    :target: https://hub.docker.com/r/ucphhpc/ssh-mount-dummy
+
+.. image:: https://img.shields.io/docker/image-size/ucphhpc/ssh-mount-dummy
+    :target: https://hub.docker.com/r/ucphhpc/ssh-mount-dummy
+
 A simple repo for providing a Docker container that can be used to test SSH(FS) access and mounting.
 
 **This is used for testing and should not be used in production for anything!**
