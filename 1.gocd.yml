@@ -5,11 +5,11 @@ environments:
       DOCKERHUB_USERNAME: '{{SECRET:[dockerhub][username]}}'
       GIT_USER: '{{SECRET:[github][username]}}'
     pipelines:
-    - arm64-latest
-    - amd64-latest
+    - ssh-mount-dummy-arm64
+    - ssh-mount-dummy-amd64
 format_version: 10
 pipelines:
-  amd64-latest:
+  ssh-mount-dummy-amd64:
     display_order: -1
     group: bare_metal_docker_image
     label_template: ${COUNT}
@@ -23,18 +23,18 @@ pipelines:
         username: ${GIT_USER}
       ssh_mount_dummy_git:
         branch: master
-        destination: docker-ssh-mount-dummy
+        destination: ssh-mount-dummy-amd64
         git: https://github.com/rasmunk/docker-ssh-mount-dummy.git
     parameters:
       ARGS: ''
       COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
-      DEFAULT_TAG: latest
-      IMAGE: amd64
+      DEFAULT_TAG: amd64
+      IMAGE: ssh-mount-dummy
       PUSH_DIRECTORY: publish-docker-scripts
-      SRC_DIRECTORY: docker-ssh-mount-dummy
-      TEST_DIRECTORY: docker-ssh-mount-dummy
+      SRC_DIRECTORY: ssh-mount-dummy-amd64
+      TEST_DIRECTORY: ssh-mount-dummy-amd64
     template: bare_metal_docker_image
-  arm64-latest:
+  ssh-mount-dummy-arm64:
     display_order: -1
     group: bare_metal_docker_image
     label_template: ${COUNT}
@@ -48,14 +48,14 @@ pipelines:
         username: ${GIT_USER}
       ssh_mount_dummy_git:
         branch: master
-        destination: docker-ssh-mount-dummy
+        destination: ssh-mount-dummy-arm64
         git: https://github.com/rasmunk/docker-ssh-mount-dummy.git
     parameters:
       ARGS: ''
       COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
-      DEFAULT_TAG: latest
-      IMAGE: arm64
+      DEFAULT_TAG: arm64
+      IMAGE: ssh-mount-dummy
       PUSH_DIRECTORY: publish-docker-scripts
-      SRC_DIRECTORY: docker-ssh-mount-dummy
-      TEST_DIRECTORY: docker-ssh-mount-dummy
+      SRC_DIRECTORY: ssh-mount-dummy-arm64
+      TEST_DIRECTORY: ssh-mount-dummy-arm64
     template: bare_metal_docker_image

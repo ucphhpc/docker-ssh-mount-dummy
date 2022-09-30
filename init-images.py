@@ -54,11 +54,6 @@ def get_common_pipeline():
 
 def get_common_materials():
     common_materials = {
-        "ssh_mount_dummy_git": {
-            "git": "https://github.com/rasmunk/docker-ssh-mount-dummy.git",
-            "branch": branch,
-            "destination": REPO_NAME,
-        },
         # this is the name of material
         # says about type of material and url at once
         "publish_docker_git": {
@@ -71,6 +66,16 @@ def get_common_materials():
     }
     return common_materials
 
+def  get_image_materials(image, version):
+    image_materials = {
+        "ssh_mount_dummy_git": {
+            "git": "https://github.com/rasmunk/docker-ssh-mount-dummy.git",
+            "branch": branch,
+            "destination": "{}-{}".format(image, version),
+        },
+    }
+    return image_materials
+
 
 def get_upstream_materials(name, pipeline, stage):
     upstream_materials = {
@@ -82,10 +87,12 @@ def get_upstream_materials(name, pipeline, stage):
     return upstream_materials
 
 
-def get_materials(image, upstream_pipeline=None, stage=None):
+def get_materials(image, version, upstream_pipeline=None, stage=None):
     materials = {}
     common_materials = get_common_materials()
+    image_materials = get_image_materials(image, version)
     materials.update(common_materials)
+    materials.update(image_materials)
     if upstream_pipeline and stage:
         upstream_materials = get_upstream_materials(image, upstream_pipeline, stage)
         materials.update(upstream_materials)
@@ -256,10 +263,16 @@ if __name__ == "__main__":
             ):
                 parent_pipeline = "{}-{}".format(parent["image"], parent["tag"])
                 materials = get_materials(
-                    image, upstream_pipeline=parent_pipeline, stage="push"
+                    image,
+                    version,
+                    upstream_pipeline=parent_pipeline,
+                    stage="push"
                 )
             else:
-                materials = get_materials(image)
+                materials = get_materials(
+                    image,
+                    version
+                )
 
             image_version_name = "{}-{}".format(image, version)
             image_pipeline = {
@@ -268,8 +281,8 @@ if __name__ == "__main__":
                 "parameters": {
                     "IMAGE": image,
                     "DEFAULT_TAG": version,
-                    "SRC_DIRECTORY": REPO_NAME,
-                    "TEST_DIRECTORY": REPO_NAME,
+                    "SRC_DIRECTORY": "{}-{}".format(image, version),
+                    "TEST_DIRECTORY": "{}-{}".format(image, version),
                     "PUSH_DIRECTORY": "publish-docker-scripts",
                     "COMMIT_TAG": COMMIT_TAG,
                     "ARGS": "",

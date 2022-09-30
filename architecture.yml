@@ -1,16 +1,16 @@
 owner: ucphhpc
 architecture:
-  arm64:
-    latest:
+  ssh-mount-dummy:
+    arm64:
       parent:
         owner: arm64v8
         image: debian
         tag: latest
         pipeline_dependent: false
-  amd64:
-    latest:
+    amd64:
       parent:
         owner: debian
         image: debian
         tag: latest
         pipeline_dependent: false
+    
