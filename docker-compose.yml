@@ -5,7 +5,7 @@ services:
     image: ucphhpc/ssh-mount-dummy:${TAG}
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: ssh-mount-dummy/Dockerfile.${TAG}
       args:
         USERNAME: ${USERNAME}
         PASSWORD: ${PASSWORD}
