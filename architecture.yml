@@ -1,0 +1,16 @@
+owner: ucphhpc
+architecture:
+  arm64:
+    latest:
+      parent:
+        owner: arm64v8
+        image: debian
+        tag: latest
+        pipeline_dependent: false
+  amd64:
+    latest:
+      parent:
+        owner: debian
+        image: debian
+        tag: latest
+        pipeline_dependent: false

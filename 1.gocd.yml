@@ -1,34 +1,61 @@
 environments:
   bare_metal_docker_image:
-    environments:
-      GIT_USER: "{{SECRET:[github][username]}}"
+    environment_variables:
+      DOCKERHUB_PASSWORD: '{{SECRET:[dockerhub][password]}}'
+      DOCKERHUB_USERNAME: '{{SECRET:[dockerhub][username]}}'
+      GIT_USER: '{{SECRET:[github][username]}}'
     pipelines:
-      - ssh-mount-dummy
+    - arm64-latest
+    - amd64-latest
+format_version: 10
 pipelines:
-  ssh-mount-dummy:
+  amd64-latest:
+    display_order: -1
     group: bare_metal_docker_image
-    locking: off
+    label_template: ${COUNT}
+    lock_behaviour: none
     materials:
-      ssh_mount_dummy_git:  # this is the name of material
-        # says about type of material and url at once
-        name: ssh-mount-dummy
-        git: https://github.com/rasmunk/docker-ssh-mount-dummy.git
-        branch: master
-        destination: ssh-mount-dummy
-      publish_docker_git:  # this is the name of material
-        # says about type of material and url at once
-        name: publish-docker-scripts
-        git: https://github.com/rasmunk/publish-docker-scripts.git
+      publish_docker_git:
         branch: main
-        username: ${GIT_USER}
-        password: "{{SECRET:[github][access_token]}}"
         destination: publish-docker-scripts
+        git: https://github.com/rasmunk/publish-docker-scripts.git
+        password: '{{SECRET:[github][access_token]}}'
+        username: ${GIT_USER}
+      ssh_mount_dummy_git:
+        branch: master
+        destination: docker-ssh-mount-dummy
+        git: https://github.com/rasmunk/docker-ssh-mount-dummy.git
     parameters:
-      IMAGE: docker-ssh-mount-dummy
       ARGS: ''
       COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
       DEFAULT_TAG: latest
-      SRC_DIRECTORY: ssh-mount-dummy
-      TEST_DIRECTORY: ssh-mount-dummy
+      IMAGE: amd64
       PUSH_DIRECTORY: publish-docker-scripts
+      SRC_DIRECTORY: docker-ssh-mount-dummy
+      TEST_DIRECTORY: docker-ssh-mount-dummy
+    template: bare_metal_docker_image
+  arm64-latest:
+    display_order: -1
+    group: bare_metal_docker_image
+    label_template: ${COUNT}
+    lock_behaviour: none
+    materials:
+      publish_docker_git:
+        branch: main
+        destination: publish-docker-scripts
+        git: https://github.com/rasmunk/publish-docker-scripts.git
+        password: '{{SECRET:[github][access_token]}}'
+        username: ${GIT_USER}
+      ssh_mount_dummy_git:
+        branch: master
+        destination: docker-ssh-mount-dummy
+        git: https://github.com/rasmunk/docker-ssh-mount-dummy.git
+    parameters:
+      ARGS: ''
+      COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
+      DEFAULT_TAG: latest
+      IMAGE: arm64
+      PUSH_DIRECTORY: publish-docker-scripts
+      SRC_DIRECTORY: docker-ssh-mount-dummy
+      TEST_DIRECTORY: docker-ssh-mount-dummy
     template: bare_metal_docker_image
