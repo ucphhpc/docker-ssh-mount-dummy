@@ -105,3 +105,8 @@ ENV/
 test_id_rsa
 
 build/
+
+# Generated dockerfiles
+*/Dockerfile.*
+!*/Dockerfile.j2
+!*/Dockerfile.test
