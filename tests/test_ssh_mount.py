@@ -8,16 +8,17 @@ from paramiko.ssh_exception import BadHostKeyException, AuthenticationException,
 from os.path import dirname, realpath
 
 IMAGE_NAME = "ssh-mount-dummy"
-IMAGE_TAG = "test"
+IMAGE_TAG = "edge"
 IMAGE = ''.join([IMAGE_NAME, ":", IMAGE_TAG])
 NETWORK_NAME = "ssh_test"
 
 # paths
-docker_path = dirname(dirname(realpath(__file__)))
+root_path = dirname(dirname(realpath(__file__)))
 sock_path = '/var/run/docker.sock'
+dockerfile_path = "{}/{}/{}".format(root_path, IMAGE_NAME, "Dockerfile.{}".format(IMAGE_TAG))
 
 # image_build
-docker_img = {'path': docker_path, 'tag': IMAGE, 'rm': True, 'pull': False}
+docker_img = {'path': root_path, 'dockerfile': dockerfile_path, 'tag': IMAGE, 'rm': True, 'pull': False}
 
 # containers
 host = socket.gethostname()

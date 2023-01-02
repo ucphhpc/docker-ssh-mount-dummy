@@ -5,6 +5,8 @@ environments:
       DOCKERHUB_USERNAME: '{{SECRET:[dockerhub][username]}}'
       GIT_USER: '{{SECRET:[github][username]}}'
     pipelines:
+    - ssh-mount-dummy-edge
+    - ssh-mount-dummy-latest
     - ssh-mount-dummy-arm64
     - ssh-mount-dummy-amd64
 format_version: 10
@@ -58,4 +60,54 @@ pipelines:
       PUSH_DIRECTORY: publish-docker-scripts
       SRC_DIRECTORY: ssh-mount-dummy-arm64
       TEST_DIRECTORY: ssh-mount-dummy-arm64
+    template: bare_metal_docker_image
+  ssh-mount-dummy-edge:
+    display_order: -1
+    group: bare_metal_docker_image
+    label_template: ${COUNT}
+    lock_behaviour: none
+    materials:
+      publish_docker_git:
+        branch: main
+        destination: publish-docker-scripts
+        git: https://github.com/rasmunk/publish-docker-scripts.git
+        password: '{{SECRET:[github][access_token]}}'
+        username: ${GIT_USER}
+      ssh_mount_dummy_git:
+        branch: master
+        destination: ssh-mount-dummy-edge
+        git: https://github.com/rasmunk/docker-ssh-mount-dummy.git
+    parameters:
+      ARGS: ''
+      COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
+      DEFAULT_TAG: edge
+      IMAGE: ssh-mount-dummy
+      PUSH_DIRECTORY: publish-docker-scripts
+      SRC_DIRECTORY: ssh-mount-dummy-edge
+      TEST_DIRECTORY: ssh-mount-dummy-edge
+    template: bare_metal_docker_image
+  ssh-mount-dummy-latest:
+    display_order: -1
+    group: bare_metal_docker_image
+    label_template: ${COUNT}
+    lock_behaviour: none
+    materials:
+      publish_docker_git:
+        branch: main
+        destination: publish-docker-scripts
+        git: https://github.com/rasmunk/publish-docker-scripts.git
+        password: '{{SECRET:[github][access_token]}}'
+        username: ${GIT_USER}
+      ssh_mount_dummy_git:
+        branch: master
+        destination: ssh-mount-dummy-latest
+        git: https://github.com/rasmunk/docker-ssh-mount-dummy.git
+    parameters:
+      ARGS: ''
+      COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
+      DEFAULT_TAG: latest
+      IMAGE: ssh-mount-dummy
+      PUSH_DIRECTORY: publish-docker-scripts
+      SRC_DIRECTORY: ssh-mount-dummy-latest
+      TEST_DIRECTORY: ssh-mount-dummy-latest
     template: bare_metal_docker_image
