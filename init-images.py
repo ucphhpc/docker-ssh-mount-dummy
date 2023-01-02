@@ -176,10 +176,6 @@ if __name__ == "__main__":
             if not parent:
                 print("Missing required parent for image: {}".format(image))
                 exit(-2)
-            
-            if "owner" not in parent:
-                print("Missing required parent attribute 'owner': {}".format(image))
-                exit(-2)
 
             if "image" not in parent:
                 print("Missing required parent attribute 'image': {}".format(image))
@@ -189,9 +185,14 @@ if __name__ == "__main__":
                 print("Missing required parent attribute 'tag': {}".format(image))
                 exit(-2)
 
-            parent_image = "{}/{}:{}".format(
-                parent["owner"], parent["image"], parent["tag"]
-            )
+            if "owner" not in parent:
+                parent_image = "{}:{}".format(
+                    parent["image"], parent["tag"]
+                )
+            else:
+                parent_image = "{}/{}:{}".format(
+                    parent["owner"], parent["image"], parent["tag"]
+                )
 
             template_file = build_data.get("file", "{}/Dockerfile.j2".format(image))
             output_file = "{}/Dockerfile.{}".format(image, version)

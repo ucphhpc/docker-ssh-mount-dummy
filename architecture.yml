@@ -9,7 +9,6 @@ architecture:
         pipeline_dependent: false
     amd64:
       parent:
-        owner: debian
         image: debian
         tag: latest
         pipeline_dependent: false

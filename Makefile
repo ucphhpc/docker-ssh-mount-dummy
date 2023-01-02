@@ -19,6 +19,7 @@ ifneq ($(shell test -e .env && echo yes), yes)
 		ln -s defaults.env .env
 endif
 endif
+	. $(VENV)/activate; python3 init-images.py
 
 dockerbuild:
 	docker-compose build $(ARGS)
