@@ -59,3 +59,7 @@ In turn, the launched image can be stopped by running the following command::
 
     docker-compose down
 
+--------
+Security
+--------
+Any security related questions/issues/inquries should be directed at security@erda.dk
