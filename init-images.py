@@ -282,10 +282,11 @@ if __name__ == "__main__":
                 "parameters": {
                     "IMAGE": image,
                     "DEFAULT_TAG": version,
+                    "COMMIT_TAG": COMMIT_TAG,
+                    "EXTRA_TAG": "",
                     "SRC_DIRECTORY": "{}-{}".format(image, version),
                     "TEST_DIRECTORY": "{}-{}".format(image, version),
                     "PUSH_DIRECTORY": "publish-docker-scripts",
-                    "COMMIT_TAG": COMMIT_TAG,
                     "ARGS": "",
                 },
             }

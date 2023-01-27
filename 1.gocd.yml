@@ -31,6 +31,7 @@ pipelines:
       ARGS: ''
       COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
       DEFAULT_TAG: amd64
+      EXTRA_TAG: ''
       IMAGE: ssh-mount-dummy
       PUSH_DIRECTORY: publish-docker-scripts
       SRC_DIRECTORY: ssh-mount-dummy-amd64
@@ -56,6 +57,7 @@ pipelines:
       ARGS: ''
       COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
       DEFAULT_TAG: arm64
+      EXTRA_TAG: ''
       IMAGE: ssh-mount-dummy
       PUSH_DIRECTORY: publish-docker-scripts
       SRC_DIRECTORY: ssh-mount-dummy-arm64
@@ -81,6 +83,7 @@ pipelines:
       ARGS: ''
       COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
       DEFAULT_TAG: edge
+      EXTRA_TAG: ''
       IMAGE: ssh-mount-dummy
       PUSH_DIRECTORY: publish-docker-scripts
       SRC_DIRECTORY: ssh-mount-dummy-edge
@@ -106,6 +109,7 @@ pipelines:
       ARGS: ''
       COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
       DEFAULT_TAG: latest
+      EXTRA_TAG: ''
       IMAGE: ssh-mount-dummy
       PUSH_DIRECTORY: publish-docker-scripts
       SRC_DIRECTORY: ssh-mount-dummy-latest
