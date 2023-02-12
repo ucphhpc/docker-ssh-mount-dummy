@@ -37,6 +37,9 @@ pipelines:
       SRC_DIRECTORY: ssh-mount-dummy-amd64
       TEST_DIRECTORY: ssh-mount-dummy-amd64
     template: bare_metal_docker_image
+    timer: &id001
+      only_on_changes: 'no'
+      spec: 0 0 0 1 * ?
   ssh-mount-dummy-arm64:
     display_order: -1
     group: bare_metal_docker_image
@@ -63,6 +66,7 @@ pipelines:
       SRC_DIRECTORY: ssh-mount-dummy-arm64
       TEST_DIRECTORY: ssh-mount-dummy-arm64
     template: bare_metal_docker_image
+    timer: *id001
   ssh-mount-dummy-edge:
     display_order: -1
     group: bare_metal_docker_image
@@ -89,6 +93,7 @@ pipelines:
       SRC_DIRECTORY: ssh-mount-dummy-edge
       TEST_DIRECTORY: ssh-mount-dummy-edge
     template: bare_metal_docker_image
+    timer: *id001
   ssh-mount-dummy-latest:
     display_order: -1
     group: bare_metal_docker_image
@@ -115,3 +120,4 @@ pipelines:
       SRC_DIRECTORY: ssh-mount-dummy-latest
       TEST_DIRECTORY: ssh-mount-dummy-latest
     template: bare_metal_docker_image
+    timer: *id001

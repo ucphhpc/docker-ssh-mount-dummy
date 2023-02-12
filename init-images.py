@@ -46,6 +46,10 @@ def get_common_pipeline():
         "group": GROUP,
         "label_template": "${COUNT}",
         "lock_behaviour": "none",
+        "timer": {
+            "spec": "0 0 0 1 * ?",
+            "only_on_changes": "no"
+        },
         "display_order": -1,
         "template": TEAMPLATE,
     }
