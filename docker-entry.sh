@@ -6,4 +6,4 @@ echo "Reconfiguring OpenSSH Server"
 
 echo "Running the OpenSSH Server"
 # Launch the main.py script that starts the OpenSSH server daemon
-/usr/bin/python3 /app/main.py
+python3 main.py
