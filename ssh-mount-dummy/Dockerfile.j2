@@ -35,11 +35,4 @@ EXPOSE 22
 # Add the Docker Entrypoing script
 ADD docker-entry.sh /app/docker-entry.sh
 RUN chmod +x /app/docker-entry.sh
-
-# Add Tini
-ENV TINI_VERSION v0.18.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--"]
-
 CMD ["bash", "/app/docker-entry.sh"]

@@ -3,6 +3,7 @@ version: '3.7'
 services:
   agent:
     image: ucphhpc/ssh-mount-dummy:${TAG}
+    init: true
     build:
       context: ./
       dockerfile: ssh-mount-dummy/Dockerfile.${TAG}

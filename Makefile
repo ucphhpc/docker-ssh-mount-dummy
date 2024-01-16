@@ -5,6 +5,11 @@ IMAGE=$(PACKAGE_NAME)
 # Enable that the builder should use buildkit
 # https://docs.docker.com/develop/develop-images/build_enhancements/
 DOCKER_BUILDKIT=1
+# NOTE: dynamic lookup with docker as default and fallback to podman
+DOCKER = $(shell which docker || which podman)
+# if compose is not found, try to use it as plugin
+DOCKER_COMPOSE = $(shell which docker-compose || which podman-compose || echo 'docker compose')
+$(echo ${DOCKER_COMPOSE} >/dev/null)
 TAG=edge
 ARGS=
 
@@ -22,13 +27,13 @@ endif
 	. $(VENV)/activate; python3 init-images.py
 
 dockerbuild:
-	docker-compose build $(ARGS)
+	$(DOCKER_COMPOSE) build $(ARGS)
 
 dockerclean:
-	docker rmi -f $(OWNER)/$(IMAGE):$(TAG)
+	$(DOCKER) rmi -f $(OWNER)/$(IMAGE):$(TAG)
 
 dockerpush:
-	docker push $(OWNER)/$(IMAGE):$(TAG)
+	$(DOCKER) push $(OWNER)/$(IMAGE):$(TAG)
 
 clean:
 	$(MAKE) dockerclean
