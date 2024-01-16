@@ -35,6 +35,12 @@ dockerclean:
 dockerpush:
 	$(DOCKER) push $(OWNER)/$(IMAGE):$(TAG)
 
+up:
+	$(DOCKER_COMPOSE) up -d
+
+down:
+	$(DOCKER_COMPOSE) down
+
 clean:
 	$(MAKE) dockerclean
 	$(MAKE) distclean
