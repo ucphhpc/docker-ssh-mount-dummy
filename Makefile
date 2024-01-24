@@ -24,6 +24,7 @@ ifneq ($(shell test -e .env && echo yes), yes)
 		ln -s defaults.env .env
 endif
 endif
+	mkdir -p authorized-keys
 	. $(VENV)/activate; python3 init-images.py
 
 dockerbuild:
@@ -45,6 +46,7 @@ clean:
 	$(MAKE) dockerclean
 	$(MAKE) distclean
 	$(MAKE) venv-clean
+	rm -fr authorized-keys
 	rm -fr .env
 	rm -fr .pytest_cache
 	rm -fr tests/__pycache__

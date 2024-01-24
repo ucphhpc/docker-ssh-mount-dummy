@@ -10,7 +10,10 @@ services:
       args:
         USERNAME: ${USERNAME}
         PASSWORD: ${PASSWORD}
+        AUTHORIZED_KEYS_DIR: ${AUTHORIZED_KEYS_DIR}
     ports:
       - "2222:22"
     env_file:
       - .env
+    volumes:
+      - ./authorized-keys:${AUTHORIZED_KEYS_DIR}:ro

@@ -12,12 +12,25 @@ def get_username(default_fallback=False):
             return None
     return os.environ["USERNAME"]
 
+def get_authorized_keys_dir():
+    if "AUTHORIZED_KEYS_DIR" not in os.environ:
+        return None
+    return os.environ["AUTHORIZED_KEYS_DIR"]
+
 
 def main():
     username = get_username(default_fallback=True)
     if not username:
         print("Missing USERNAME environment variable was not set.")
         exit(-1)
+
+    public_keys = []
+    authorized_keys_dir = get_authorized_keys_dir()
+    if authorized_keys_dir and os.path.exists(authorized_keys_dir):
+        for root, dirs, files in os.walk(authorized_keys_dir):
+            for file in files:
+                with open(os.path.join(root, file), 'r') as f:
+                    public_keys.append(f.read())
 
     home = "/home/{}".format(username)
     ssh_dir = "{}/.ssh".format(home)
@@ -29,10 +42,12 @@ def main():
     rsa_key.write_private_key_file(f_path)
     public_key = ("%s ssh-rsa %s %s" % (
         '', rsa_key.get_base64(), '')).strip()
+    public_keys.append(public_key)
 
     auth_keys = "{}/authorized_keys".format(ssh_dir)
     with open(auth_keys, 'w') as auth_file:
-        auth_file.write(public_key)
+        for public_key in public_keys:
+            auth_file.write(public_key)
     os.chmod(auth_keys, 0o600)
 
     # Ensure .ssh dir and it's content is owned by the username
