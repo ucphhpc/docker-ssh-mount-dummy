@@ -110,3 +110,5 @@ build/
 */Dockerfile.*
 !*/Dockerfile.j2
 !*/Dockerfile.test
+
+authorized-keys/
