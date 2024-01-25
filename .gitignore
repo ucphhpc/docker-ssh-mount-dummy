@@ -111,4 +111,8 @@ build/
 !*/Dockerfile.j2
 !*/Dockerfile.test
 
+# Generated public keys
 authorized-keys/
+
+# VScode
+.vscode/

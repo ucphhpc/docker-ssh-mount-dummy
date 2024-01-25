@@ -39,8 +39,12 @@ def test_ssh_mount(image, network, make_container):
     ssh_host_target = '127.0.0.1'
     ssh.set_missing_host_key_policy(AutoAddPolicy)
     try:
-        ssh.connect(ssh_host_target, port=2222, username=target_user,
-                    password=password)
+        ssh.connect(
+            ssh_host_target,
+            port=2222,
+            username=target_user,
+            password=password
+        )
     except (BadHostKeyException, AuthenticationException,
             SSHException, socket.error) as error:
         print("Error: {}".format(error))
