@@ -11,11 +11,11 @@ PasswordAuthentication yes
 PubkeyAuthentication yes
 
 # LogLevel VERBOSE logs user's key fingerprint on login. Needed to have a clear audit track of which key was using to log in.
-LogLevel VERBOSE
+LogLevel DEBUG3
 
 # https://www.baeldung.com/linux/openssh-internal-sftp-vs-sftp-server
 # https://man.openbsd.org/sftp-server
-Subsystem sftp internal-sftp -f AUTHPRIV -l INFO
+Subsystem sftp internal-sftp -f AUTHPRIV -l DEBUG
 
 # Root login is not allowed for auditing reasons. This is because it's difficult to track which process belongs to which root user:
 #
@@ -24,3 +24,6 @@ Subsystem sftp internal-sftp -f AUTHPRIV -l INFO
 # On other OSes, the user session id is not necessarily recorded at all kernel-side.
 # Using regular users in combination with /bin/su or /usr/bin/sudo ensure a clear audit track.
 PermitRootLogin no
+
+# https://man.openbsd.org/sshd_config#PubkeyAcceptedAlgorithms
+PubkeyAcceptedAlgorithms ssh-ed25519-cert-v01@openssh.com,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com,rsa-sha2-512,rsa-sha2-256
