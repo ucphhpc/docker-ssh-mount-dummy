@@ -22,4 +22,3 @@ architecture:
         image: debian
         tag: latest
         pipeline_dependent: false
-    

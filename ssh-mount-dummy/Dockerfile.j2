@@ -22,6 +22,7 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 
 COPY main.py /app/main.py
 COPY requirements.txt /app/requirements.txt
+COPY utils /app/utils
 
 COPY ./ssh-mount-dummy/config/sshd_config /etc/ssh/sshd_config
 

@@ -46,10 +46,7 @@ def get_common_pipeline():
         "group": GROUP,
         "label_template": "${COUNT}",
         "lock_behaviour": "none",
-        "timer": {
-            "spec": "0 0 0 1 * ?",
-            "only_on_changes": "no"
-        },
+        "timer": {"spec": "0 0 0 1 * ?", "only_on_changes": "no"},
         "display_order": -1,
         "template": TEAMPLATE,
     }
@@ -70,7 +67,8 @@ def get_common_materials():
     }
     return common_materials
 
-def  get_image_materials(image, version):
+
+def get_image_materials(image, version):
     image_materials = {
         "ssh_mount_dummy_git": {
             "git": "https://github.com/rasmunk/docker-ssh-mount-dummy.git",
@@ -120,12 +118,14 @@ if __name__ == "__main__":
         "--makefile", default="Makefile", help="The makefile that defines the images"
     )
     parser.add_argument(
-        "--generate-test-image", default=False,
-        help="Whether the script should generate a test image as well, loads the Jinja Dockerfile template in --test-image-path"
+        "--generate-test-image",
+        default=False,
+        help="Whether the script should generate a test image as well, loads the Jinja Dockerfile template in --test-image-path",
     )
     parser.add_argument(
-        "--test-image-path", default=os.path.join("res", "tests", "Dockerfile.test.j2"),
-        help="The path to Jinja Dockerfile template that is used to generate test images"
+        "--test-image-path",
+        default=os.path.join("res", "tests", "Dockerfile.test.j2"),
+        help="The path to Jinja Dockerfile template that is used to generate test images",
     )
     args = parser.parse_args()
 
@@ -154,7 +154,7 @@ if __name__ == "__main__":
         print("Failed to find the architecture in: {}".format(architecture_path))
         exit(-1)
 
-    list_images= list(images.keys())
+    list_images = list(images.keys())
     num_images = len(list_images) - 1
 
     print()
@@ -190,9 +190,7 @@ if __name__ == "__main__":
                 exit(-2)
 
             if "owner" not in parent:
-                parent_image = "{}:{}".format(
-                    parent["image"], parent["tag"]
-                )
+                parent_image = "{}:{}".format(parent["image"], parent["tag"])
             else:
                 parent_image = "{}/{}:{}".format(
                     parent["owner"], parent["image"], parent["tag"]
@@ -268,16 +266,10 @@ if __name__ == "__main__":
             ):
                 parent_pipeline = "{}-{}".format(parent["image"], parent["tag"])
                 materials = get_materials(
-                    image,
-                    version,
-                    upstream_pipeline=parent_pipeline,
-                    stage="push"
+                    image, version, upstream_pipeline=parent_pipeline, stage="push"
                 )
             else:
-                materials = get_materials(
-                    image,
-                    version
-                )
+                materials = get_materials(image, version)
 
             image_version_name = "{}-{}".format(image, version)
             image_pipeline = {

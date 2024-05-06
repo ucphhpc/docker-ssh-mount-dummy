@@ -1,4 +1,6 @@
 import os
+import grp
+import pwd
 import shutil
 
 
@@ -80,6 +82,17 @@ def chmod(path, mode, **kwargs):
     return True, "Set the path: {} with permissions: {}".format(path, mode)
 
 
+def chown(path, uid, gid):
+    try:
+        os.chown(os.path.expanduser(path), uid, gid)
+    except Exception as err:
+        return (
+            False,
+            "Failed to set owner: {} on: {} - {}".format(uid, path, err),
+        )
+    return True, "Set the path: {} with owner: {}".format(path, uid)
+
+
 def copy(original, target):
     # Copy path to target
     try:
@@ -90,3 +103,19 @@ def copy(original, target):
             "Failed to copy file: {} to: {} - {}".format(original, target, err),
         )
     return True, "Copied file: {} to: {}".format(original, target)
+
+
+def lookup_uid(username):
+    try:
+        return pwd.getpwnam(username).pw_uid
+    except Exception as err:
+        print("Failed to discover user uid: {} - {}".format(username, err))
+    return False
+
+
+def lookup_gid(groupname):
+    try:
+        return grp.getgrnam(groupname).gr_gid
+    except Exception as err:
+        print("Failed to discover group gid: {} - {}".format(groupname, err))
+    return False

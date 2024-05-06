@@ -4,7 +4,7 @@ import pytest
 from docker.errors import NotFound
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def network(request):
     """Create the overlay network that the hub and server services will
     use to communicate.
@@ -21,7 +21,7 @@ def network(request):
             removed = True
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def image(request):
     client = docker.from_env()
     _image = client.images.build(**request.param)
@@ -40,7 +40,7 @@ def image(request):
             removed = True
 
 
-@pytest.fixture(name='make_container')
+@pytest.fixture(name="make_container")
 def make_container_():
     created = []
     client = docker.from_env()
@@ -56,7 +56,7 @@ def make_container_():
     yield make_container
 
     for c in created:
-        assert hasattr(c, 'id')
+        assert hasattr(c, "id")
         c.stop()
         c.wait()
         c.remove()
@@ -68,14 +68,14 @@ def make_container_():
                 removed = True
 
 
-@pytest.fixture(name='make_service')
+@pytest.fixture(name="make_service")
 def make_service_():
     created = []
     client = docker.from_env()
 
     def make_service(options):
         _service = client.services.create(**options)
-        while 'running' not in [task['Status']['State'] for task in _service.tasks()]:
+        while "running" not in [task["Status"]["State"] for task in _service.tasks()]:
             time.sleep(1)
             _service = client.services.get(_service.id)
         created.append(_service)
@@ -84,7 +84,7 @@ def make_service_():
     yield make_service
 
     for c in created:
-        assert hasattr(c, 'id')
+        assert hasattr(c, "id")
         c.remove()
         removed = False
         while not removed:
@@ -94,7 +94,7 @@ def make_service_():
                 removed = True
 
 
-@pytest.fixture(name='make_volume')
+@pytest.fixture(name="make_volume")
 def make_volume_():
     created = []
     client = docker.from_env()
