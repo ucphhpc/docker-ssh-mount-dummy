@@ -121,10 +121,10 @@ def lookup_gid(groupname):
     return False
 
 
-def touch(path):
+def touch(path, times=None):
     try:
-        with open(path) as _:
-            pass
+        with open(path, "a"):
+            os.utime(path, times)
     except Exception as err:
         return False, "Failed to touch file: {} - {}".format(path, err)
     return True, "Touched file: {}".format(path)

@@ -48,8 +48,8 @@ def main():
     ssh_dir = os.path.join(home, ".ssh")
     if not exists(ssh_dir):
         created, msg = makedirs(ssh_dir)
+        print(msg)
         if not created:
-            print(msg)
             exit(-1)
 
     ssh_key_path = os.path.join(ssh_dir, "id_rsa")
