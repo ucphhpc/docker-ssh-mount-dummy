@@ -1,7 +1,17 @@
 import os
 import paramiko
 from subprocess import call
-from utils.io import makedirs, exists, write, chmod, chown, lookup_uid, lookup_gid, load
+from utils.io import (
+    makedirs,
+    exists,
+    write,
+    chmod,
+    chown,
+    lookup_uid,
+    lookup_gid,
+    load,
+    touch,
+)
 
 
 def get_username(default_fallback=False):
@@ -49,7 +59,13 @@ def main():
     public_keys.append(public_key)
 
     authorized_keys_path = os.path.join(ssh_dir, "authorized_keys")
-    if not write(authorized_keys_path, public_keys, mode="w"):
+    if not exists(authorized_keys_path):
+        created, msg = touch(authorized_keys_path)
+        print(msg)
+        if not created:
+            exit(-1)
+
+    if not write(authorized_keys_path, public_keys, mode="a"):
         print("Failed to write public keys to authorized_keys file.")
         exit(-1)
 

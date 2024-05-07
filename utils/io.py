@@ -119,3 +119,12 @@ def lookup_gid(groupname):
     except Exception as err:
         print("Failed to discover group gid: {} - {}".format(groupname, err))
     return False
+
+
+def touch(path):
+    try:
+        with open(path) as _:
+            pass
+    except Exception as err:
+        return False, "Failed to touch file: {} - {}".format(path, err)
+    return True, "Touched file: {}".format(path)
