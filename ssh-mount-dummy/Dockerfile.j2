@@ -4,6 +4,8 @@ LABEL MAINTAINER="Rasmus Munk <rasmus.munk@nbi.ku.dk>"
 ARG USERNAME=mountuser
 ARG PASSWORD=Passw0rd!
 ARG AUTHORIZED_KEYS_DIR=/authorized-keys
+ARG TZ=Europe/Copenhagen
+ENV TZ=${TZ}
 
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
@@ -31,11 +33,13 @@ WORKDIR /app
 RUN pip3 install setuptools wheel --break-system-packages \
     && pip3 install -r requirements.txt --break-system-packages
 
+ENV USERNAME=${USERNAME}
+ENV PASSWORD=${PASSWORD}
+
 RUN useradd -ms /bin/bash ${USERNAME}
 RUN echo "${USERNAME}:${PASSWORD}" | chpasswd
 
-EXPOSE 22
-
+ENV AUTHORIZED_KEYS_DIR=${AUTHORIZED_KEYS_DIR}
 # Create the designated SSH directory where the HOST 
 # can mount in external SSH keys
 RUN mkdir -p ${AUTHORIZED_KEYS_DIR}
@@ -43,4 +47,6 @@ RUN mkdir -p ${AUTHORIZED_KEYS_DIR}
 # Add the Docker Entrypoing script
 ADD docker-entry.sh /app/docker-entry.sh
 RUN chmod +x /app/docker-entry.sh
+
+EXPOSE 22
 CMD ["bash", "/app/docker-entry.sh"]
