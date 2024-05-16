@@ -1,6 +1,7 @@
 import pytest
 import socket
 import docker
+import random
 from paramiko import SSHClient
 from paramiko.client import AutoAddPolicy
 from paramiko.ssh_exception import (
@@ -9,6 +10,7 @@ from paramiko.ssh_exception import (
     SSHException,
 )
 from os.path import dirname, realpath
+from helpers import wait_for_container_output, wait_for_session, remove_container
 
 IMAGE_NAME = "ssh-mount-dummy"
 IMAGE_TAG = "edge"
@@ -32,8 +34,8 @@ docker_img = {
 }
 
 # containers
-host = socket.gethostname()
-ssh_dummy_cont = {"image": IMAGE, "detach": True, "ports": {22: 2222}}
+random_ssh_port = random.randint(2200, 2299)
+ssh_dummy_cont = {"image": IMAGE, "detach": True, "ports": {22: random_ssh_port}}
 
 
 # launch underlying stack for the test
@@ -44,14 +46,24 @@ ssh_dummy_cont = {"image": IMAGE, "detach": True, "ports": {22: 2222}}
 def test_ssh_mount(image, network, make_container):
     client = docker.from_env()
     ssh = SSHClient()
-    make_container(ssh_dummy_cont)
+    container = make_container(ssh_dummy_cont)
+    assert container
+    assert container.status == "running"
+    assert wait_for_container_output(container.id, "Running the OpenSSH Server")
+
     # volume
     target_user = "mountuser"
     password = "Passw0rd!"
     ssh_host_target = "127.0.0.1"
     ssh.set_missing_host_key_policy(AutoAddPolicy)
     try:
-        ssh.connect(ssh_host_target, port=2222, username=target_user, password=password)
+        assert wait_for_session(ssh_host_target, random_ssh_port, max_attempts=10)
+        ssh.connect(
+            ssh_host_target,
+            port=random_ssh_port,
+            username=target_user,
+            password=password,
+        )
     except (
         BadHostKeyException,
         AuthenticationException,
@@ -60,5 +72,7 @@ def test_ssh_mount(image, network, make_container):
     ) as error:
         print("Error: {}".format(error))
         assert False
+    finally:
+        assert remove_container(container.id)
 
     client.volumes.prune()
