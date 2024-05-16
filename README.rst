@@ -48,8 +48,8 @@ An alternative to password based authentication, is to used public key authentic
 The default way to accomplish this, is to put your public key in the specified ``authorized-keys`` directory in the root path of the repository.
 This directory is created by default when the ``make init`` target is executed.
 
-The default ``docker-compose.yml`` then defines that the `authorized-keys` directory is mounted into the container's ${AUTHORIZED_KEYS_DIR} directory as set in the .env file.
-Upon container instantiation, the public keys in the mounted `authorized-keys` directory are then copied to the default ``/home/${USERNAME}/.ssh/authorized_keys`` file by the ``main.py`` script.
+The default ``docker-compose.yml`` then defines that the ``authorized-keys`` directory is mounted into the container's ``AUTHORIZED_KEYS_DIR`` directory as set in the .env file.
+Upon container instantiation, the public keys in the mounted ``authorized-keys`` directory are then copied to the default ``/home/${USERNAME}/.ssh/authorized_keys`` file by the ``main.py`` script.
 
 -------------------------
 Mounting host directories
@@ -75,7 +75,7 @@ After every configuration change required has been made, the simplest way to run
 
     $ make up
 
-This will launch the image with the environment specifications defined in the .env file and the specified mounted volumes.
+This will launch the configuration specified in the ``docker-compose.yml`` file with the environment specifications defined in the ``.env`` file and the specified mounted volumes.
 
 In turn, the launched image can be stopped by executing the ``make down`` target::
 
