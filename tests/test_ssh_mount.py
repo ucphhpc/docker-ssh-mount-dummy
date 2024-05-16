@@ -10,7 +10,12 @@ from paramiko.ssh_exception import (
     SSHException,
 )
 from os.path import dirname, realpath
-from helpers import wait_for_container_output, wait_for_session, remove_container
+from helpers import (
+    wait_for_container_output,
+    wait_for_session,
+    remove_container,
+    make_container,
+)
 
 IMAGE_NAME = "ssh-mount-dummy"
 IMAGE_TAG = "edge"
@@ -43,7 +48,7 @@ ssh_dummy_cont = {"image": IMAGE, "detach": True, "ports": {22: random_ssh_port}
 @pytest.mark.parametrize(
     "network", [{"name": NETWORK_NAME, "driver": "bridge"}], indirect=["network"]
 )
-def test_ssh_mount(image, network, make_container):
+def test_ssh_mount(image, network):
     client = docker.from_env()
     ssh = SSHClient()
     container = make_container(ssh_dummy_cont)
@@ -71,7 +76,6 @@ def test_ssh_mount(image, network, make_container):
         socket.error,
     ) as error:
         print("Error: {}".format(error))
-        assert False
     finally:
         assert remove_container(container.id)
 

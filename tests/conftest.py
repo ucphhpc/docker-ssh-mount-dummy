@@ -40,34 +40,6 @@ def image(request):
             removed = True
 
 
-@pytest.fixture(name="make_container")
-def make_container_():
-    created = []
-    client = docker.from_env()
-
-    def make_container(options):
-        _container = client.containers.run(**options)
-        while _container.status != "running":
-            time.sleep(1)
-            _container = client.containers.get(_container.name)
-        created.append(_container)
-        return _container
-
-    yield make_container
-
-    for c in created:
-        assert hasattr(c, "id")
-        c.stop()
-        c.wait()
-        c.remove()
-        removed = False
-        while not removed:
-            try:
-                client.containers.get(c.id)
-            except NotFound:
-                removed = True
-
-
 @pytest.fixture(name="make_service")
 def make_service_():
     created = []

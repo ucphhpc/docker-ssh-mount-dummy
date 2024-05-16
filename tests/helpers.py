@@ -3,6 +3,21 @@ import socket
 import time
 
 
+def make_container(options, max_attempts=10):
+    client = docker.from_env()
+    _container = client.containers.run(**options)
+    attempt = 0
+    while _container.status != "running":
+        _container = client.containers.get(_container.name)
+        if _container.status == "running":
+            return _container
+        attempt += 1
+        if attempt >= max_attempts:
+            break
+        time.sleep(1)
+    return False
+
+
 def wait_for_container_output(container_id, output, wait_seconds=30):
     client = docker.from_env()
     container = client.containers.get(container_id)
