@@ -63,7 +63,7 @@ For example, to mount the host's ``mnt`` directory into the ``${USERNAME}``'s ho
       - ./authorized-keys:${AUTHORIZED_KEYS_DIR}:ro
       - ./mnt:/home/${USERNAME}/mnt:rw
 
-An alternative approach is to use the ``-v`` flag when launching the container with ``docker run``.
+An alternative approach is to use the ``-v`` flag when launching the container with ``docker run``::
 
     $ docker run -d --env /path/to/docker-ssh-mount-dummy-repo/.env -p 2222:22 -v /path/to/docker-ssh-mount-dummy-repo/mnt:/home/${USERNAME}/mnt ucphhpc/ssh-mount-dummy:latest
 
@@ -74,9 +74,6 @@ Running
 After every configuration change required has been made, the simplest way to run the container is to use the ``make up`` target::
 
     $ make up
-    docker-compose up -d
-    Creating network "docker-ssh-mount-dummy_default" with the default driver
-    Creating agent ... done
 
 This will launch the image with the environment specifications defined in the .env file and the specified mounted volumes.
 
