@@ -35,29 +35,54 @@ To build the image, simply use make in the root of the repo directory::
     Successfully built 0607b95f8b54
     Successfully tagged ucphhpc/ssh-mount-dummy:edge
 
--------------
-Configuration
--------------
+--------------
+Authentication
+--------------
 
-The default password in the `ucphhpc/ssh-mount-dummy` image is set to ``Passw0rd!``.
+The default username and password for the `ucphhpc/ssh-mount-dummy` image is set to ``mountuser`` and ``Passw0rd!``.
 This can be changed by modifying the ``.env`` file before the image is being built with make.
-
 After changing either the ``PASSWORD`` or ``USERNAME`` definitions in the ``.env`` file, the image has to be rebuilt before the changes
 will take effect.
+
+An alternative to password based authentication, is to used public key authentication.
+The default way to accomplish this, is to put your public key in the specified ``authorized-keys`` directory in the root path of the repository.
+This directory is created by default when the ``make init`` target is executed.
+
+The default ``docker-compose.yml`` then defines that the `authorized-keys` directory is mounted into the container's ${AUTHORIZED_KEYS_DIR} directory as set in the .env file.
+Upon container instantiation, the public keys in the mounted `authorized-keys` directory are then copied to the default ``/home/${USERNAME}/.ssh/authorized_keys`` file by the ``main.py`` script.
+
+-------------------------
+Mounting host directories
+-------------------------
+
+In addition to authentication, you can also customized which directories you want to mount from the host into the ssh mount dummy container.
+The recommended approach, is to amend the ``docker-compose.yml`` file to include the desired directories to be mounted via the ``volumes`` directive.
+For example, to mount the host's ``mnt`` directory into the ``${USERNAME}``'s home directory, namely the ``/home/${USERNAME}/mnt`` directory, the following can be added to the ``docker-compose.yml`` file::
+
+    volumes:
+      - ./authorized-keys:${AUTHORIZED_KEYS_DIR}:ro
+      - ./mnt:/home/${USERNAME}/mnt:rw
+
+An alternative approach is to use the ``-v`` flag when launching the container with ``docker run``.
+
+    $ docker run -d --env /path/to/docker-ssh-mount-dummy-repo/.env -p 2222:22 -v /path/to/docker-ssh-mount-dummy-repo/mnt:/home/${USERNAME}/mnt ucphhpc/ssh-mount-dummy:latest
 
 -------
 Running
 -------
 
-To launch the built image, the easiest way is to simply use ``docker-compose`` inside the repo directory::
+After every configuration change required has been made, the simplest way to run the container is to use the ``make up`` target::
 
-    $ docker-compose up -d
+    $ make up
+    docker-compose up -d
+    Creating network "docker-ssh-mount-dummy_default" with the default driver
+    Creating agent ... done
 
-This will launch the image with the environment specifications defined in the .env file.
+This will launch the image with the environment specifications defined in the .env file and the specified mounted volumes.
 
-In turn, the launched image can be stopped by running the following command::
+In turn, the launched image can be stopped by executing the ``make down`` target::
 
-    docker-compose down
+    make down
 
 --------
 Security
