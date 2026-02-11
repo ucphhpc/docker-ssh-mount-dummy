@@ -28,7 +28,8 @@ pipelines:
         destination: ssh-mount-dummy-amd64
         git: https://github.com/rasmunk/docker-ssh-mount-dummy.git
     parameters:
-      ARGS: ''
+      BUILD_MAKE_ARGS: ''
+      BUILD_MAKE_TARGET: dockerbuild
       COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
       DEFAULT_TAG: amd64
       EXTRA_TAG: ''
@@ -36,6 +37,8 @@ pipelines:
       PUSH_DIRECTORY: publish-docker-scripts
       SRC_DIRECTORY: ssh-mount-dummy-amd64
       TEST_DIRECTORY: ssh-mount-dummy-amd64
+      TEST_MAKE_ARGS: ''
+      TEST_MAKE_TARGET: test
     template: bare_metal_docker_image
     timer: &id001
       only_on_changes: 'no'
@@ -57,7 +60,8 @@ pipelines:
         destination: ssh-mount-dummy-arm64
         git: https://github.com/rasmunk/docker-ssh-mount-dummy.git
     parameters:
-      ARGS: ''
+      BUILD_MAKE_ARGS: ''
+      BUILD_MAKE_TARGET: dockerbuild
       COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
       DEFAULT_TAG: arm64
       EXTRA_TAG: ''
@@ -65,6 +69,8 @@ pipelines:
       PUSH_DIRECTORY: publish-docker-scripts
       SRC_DIRECTORY: ssh-mount-dummy-arm64
       TEST_DIRECTORY: ssh-mount-dummy-arm64
+      TEST_MAKE_ARGS: ''
+      TEST_MAKE_TARGET: test
     template: bare_metal_docker_image
     timer: *id001
   ssh-mount-dummy-edge:
@@ -84,7 +90,8 @@ pipelines:
         destination: ssh-mount-dummy-edge
         git: https://github.com/rasmunk/docker-ssh-mount-dummy.git
     parameters:
-      ARGS: ''
+      BUILD_MAKE_ARGS: ''
+      BUILD_MAKE_TARGET: dockerbuild
       COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
       DEFAULT_TAG: edge
       EXTRA_TAG: ''
@@ -92,6 +99,8 @@ pipelines:
       PUSH_DIRECTORY: publish-docker-scripts
       SRC_DIRECTORY: ssh-mount-dummy-edge
       TEST_DIRECTORY: ssh-mount-dummy-edge
+      TEST_MAKE_ARGS: ''
+      TEST_MAKE_TARGET: test
     template: bare_metal_docker_image
     timer: *id001
   ssh-mount-dummy-latest:
@@ -111,7 +120,8 @@ pipelines:
         destination: ssh-mount-dummy-latest
         git: https://github.com/rasmunk/docker-ssh-mount-dummy.git
     parameters:
-      ARGS: ''
+      BUILD_MAKE_ARGS: ''
+      BUILD_MAKE_TARGET: dockerbuild
       COMMIT_TAG: GO_REVISION_SSH_MOUNT_DUMMY_GIT
       DEFAULT_TAG: latest
       EXTRA_TAG: ''
@@ -119,5 +129,7 @@ pipelines:
       PUSH_DIRECTORY: publish-docker-scripts
       SRC_DIRECTORY: ssh-mount-dummy-latest
       TEST_DIRECTORY: ssh-mount-dummy-latest
+      TEST_MAKE_ARGS: ''
+      TEST_MAKE_TARGET: test
     template: bare_metal_docker_image
     timer: *id001

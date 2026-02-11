@@ -283,7 +283,10 @@ if __name__ == "__main__":
                     "SRC_DIRECTORY": "{}-{}".format(image, version),
                     "TEST_DIRECTORY": "{}-{}".format(image, version),
                     "PUSH_DIRECTORY": "publish-docker-scripts",
-                    "ARGS": "",
+                    "BUILD_MAKE_TARGET": "dockerbuild",
+                    "BUILD_MAKE_ARGS": "",
+                    "TEST_MAKE_TARGET": "test",
+                    "TEST_MAKE_ARGS": "",
                 },
             }
             generated_config["pipelines"][image_version_name] = image_pipeline
